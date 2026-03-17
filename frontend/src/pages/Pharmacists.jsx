@@ -24,7 +24,7 @@ function Pharmacists() {
   return (
     <div className="min-h-screen bg-slate-100">
       {/* Hero */}
-      <div className="relative pt-28 pb-16 px-8 bg-gradient-to-r from-cyan-600 to-teal-600 overflow-hidden">
+      <div className="relative pt-28 pb-16 px-4 md:px-8 bg-gradient-to-r from-cyan-600 to-teal-600 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-20 w-72 h-72 bg-white rounded-full blur-3xl" />
           <div className="absolute bottom-0 right-10 w-64 h-64 bg-white rounded-full blur-3xl" />
@@ -51,7 +51,7 @@ function Pharmacists() {
       </div>
 
       {/* Cards */}
-      <div className="max-w-7xl mx-auto px-8 py-14">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-14">
         {loading ? (
           <div className="flex justify-center py-20">
             <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-teal-600" />
@@ -59,7 +59,7 @@ function Pharmacists() {
         ) : filtered.length === 0 ? (
           <p className="text-center text-gray-400 text-lg py-20">No pharmacists found.</p>
         ) : (
-          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {filtered.map((pharmacist) => (
               <div key={pharmacist.user_id} className="flex">
                 <div className="bg-white rounded-2xl shadow-md hover:shadow-xl hover:-translate-y-1.5 transition-all duration-300 p-8 flex flex-col items-center w-full">
