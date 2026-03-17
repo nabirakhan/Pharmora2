@@ -42,11 +42,12 @@
 
 .floating-bottle-fixed {
   position: fixed;
-  bottom: 60px;
-  right: 28px;
+  bottom: 20px;
+  right: -10px;
   z-index: 50;
-  pointer-events: none;
-  filter: drop-shadow(0 12px 32px rgba(8,145,178,0.28));
+  pointer-events: auto;
+  width: 220px;
+  height: 340px;
 }
 
 .scroll-bottle-container {
