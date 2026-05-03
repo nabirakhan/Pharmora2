@@ -1,4 +1,3 @@
-
 import api from './api';
 
 class AdminService {
@@ -11,6 +10,23 @@ class AdminService {
   }
 
   async getReports(type, format = 'json') {
+    if (format === 'csv') {
+      const token = localStorage.getItem('token');
+      const response = await fetch(`${process.env.REACT_APP_API_URL || ''}/api/admin/reports?type=${type}&format=csv`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Failed to generate report' }));
+        throw new Error(error.error || 'Failed to generate report');
+      }
+      
+      return await response.text();
+    }
+    
     return api.get(`/api/admin/reports?type=${type}&format=${format}`);
   }
 

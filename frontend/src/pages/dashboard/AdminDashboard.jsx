@@ -174,36 +174,41 @@ function AdminDashboard() {
   };
 
   const generateReport = async (type) => {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/admin/reports?type=${type}&format=csv`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        }
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || "Failed to generate report");
-      }
-
-      const csvText = await response.text();
-
-      const blob = new Blob([csvText], { type: 'text/csv' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${type}_report_${new Date().toISOString().split('T')[0]}.csv`;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-
-      showNotification(`Report downloaded!`, "success");
-    } catch (err) {
-      console.error("Error generating report:", err);
-      showNotification(err.message || "Failed to generate report", "error");
+  try {
+    showNotification(`Generating ${type} report...`, "info");
+    
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error("No authentication token found");
     }
-  };
+
+    const response = await adminService.getReports(type, 'csv');
+    
+    let csvText;
+    if (typeof response === 'string') {
+      csvText = response;
+    } else if (response.data) {
+      csvText = response.data;
+    } else {
+      csvText = response;
+    }
+
+    const blob = new Blob([csvText], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `${type}_report_${new Date().toISOString().split('T')[0]}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+
+    showNotification(`${type} report downloaded successfully!`, "success");
+  } catch (err) {
+    console.error("Error generating report:", err);
+    showNotification(err.message || "Failed to generate report. Please try again.", "error");
+  }
+};
 
   const getRoleColor = (role) => {
     const colors = {
