@@ -23,7 +23,8 @@ import {
   Plus,
   UserCheck,
   Search,
-  User
+  User,
+  Menu
 } from "lucide-react";
 
 function DoctorDashboard() {
@@ -33,6 +34,7 @@ function DoctorDashboard() {
   const [activeTab, setActiveTab] = useState("overview");
   const [loading, setLoading] = useState(false);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [stats, setStats] = useState({});
   const [prescriptions, setPrescriptions] = useState([]);
@@ -247,7 +249,10 @@ function DoctorDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <div className="w-64 bg-gradient-to-b from-blue-600 to-indigo-700 text-white flex flex-col">
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+      <div className={`fixed md:relative inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-blue-600 to-indigo-700 text-white flex flex-col transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 border-b border-blue-500">
           <h2 className="text-2xl font-bold">Pharmora</h2>
           <p className="text-sm text-blue-200 mt-1">Doctor Portal</p>
@@ -256,7 +261,7 @@ function DoctorDashboard() {
           )}
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2" onClick={() => setSidebarOpen(false)}>
           <button
             onClick={() => setActiveTab("overview")}
             className={`w-full flex items-center gap-3 p-3 rounded-lg transition ${
@@ -333,7 +338,10 @@ function DoctorDashboard() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        <div className="p-4 md:p-8">
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden mb-4 p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+            <Menu size={22} />
+          </button>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome, Dr. {user?.name}!
           </h1>
@@ -343,7 +351,7 @@ function DoctorDashboard() {
             <div>
               <h2 className="text-2xl font-bold mb-6">Dashboard Overview</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-8">
                 <StatsCard
                   title="Total Prescriptions"
                   value={stats.total_prescriptions || 0}

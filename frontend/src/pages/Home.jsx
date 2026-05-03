@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { FiTruck, FiUserCheck, FiHeart, FiShield, FiClock, FiMail, FiPhone, FiMapPin, FiPackage, FiAward, FiArrowRight } from "react-icons/fi";
+import PharmoraBottle from "../components/PharmoraBottle";
 import "../styles/home.css";
 
 function CountUp({ target, suffix = "", duration = 1800 }) {
@@ -106,7 +107,7 @@ function Home() {
   return (
     <div className="ph-root">
       <div className="floating-bottle-fixed">
-        <ScrollBottle />
+        <PharmoraBottle />
       </div>
 
       <section className="ph-hero">
