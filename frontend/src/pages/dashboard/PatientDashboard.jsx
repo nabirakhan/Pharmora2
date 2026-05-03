@@ -24,7 +24,8 @@ import {
   CreditCard,
   AlertCircle,
   Plus,
-  X
+  X,
+  Menu
 } from "lucide-react";
 
 function PatientDashboard() {
@@ -34,6 +35,7 @@ function PatientDashboard() {
   const [activeTab, setActiveTab] = useState("cart");
   const [loading, setLoading] = useState(false);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [cart, setCart] = useState([]);
   const [prescriptions, setPrescriptions] = useState([]);
@@ -513,12 +515,15 @@ function PatientDashboard() {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <div className="w-64 bg-gradient-to-b from-cyan-600 to-teal-600 text-white flex flex-col">
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+      <div className={`fixed md:relative inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-cyan-600 to-teal-600 text-white flex flex-col transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 text-2xl font-bold border-b border-cyan-500">
           Pharmora
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2" onClick={() => setSidebarOpen(false)}>
           <button
             onClick={() => setActiveTab("cart")}
             className={`w-full flex items-center gap-3 p-3 rounded-lg transition ${
@@ -595,7 +600,10 @@ function PatientDashboard() {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        <div className="p-4 md:p-8">
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden mb-4 p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+            <Menu size={22} />
+          </button>
           <h1 className="text-3xl font-bold text-gray-900 mb-2">
             Welcome, {user?.name}!
           </h1>
@@ -627,10 +635,10 @@ function PatientDashboard() {
                         <img
                           src={item.image_url || "/placeholder.jpg"}
                           alt={item.name}
-                          className="w-24 h-24 object-cover rounded"
+                          className="w-16 h-16 md:w-24 md:h-24 object-cover rounded flex-shrink-0"
                         />
                         <div className="flex-1">
-                          <h3 className="font-semibold text-lg">{item.name}</h3>
+                          <h3 className="font-semibold text-sm md:text-lg">{item.name}</h3>
                           <p className="text-gray-600 text-sm">{item.category}</p>
                           <p className="text-green-700 font-bold mt-2">
                             Rs. {item.price}

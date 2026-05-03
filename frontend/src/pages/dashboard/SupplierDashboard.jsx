@@ -27,7 +27,8 @@ import {
   AlertCircle,
   RefreshCw,
   Download,
-  FileText
+  FileText,
+  Menu
 } from "lucide-react";
 
 function SupplierDashboard() {
@@ -37,6 +38,7 @@ function SupplierDashboard() {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [loading, setLoading] = useState(false);
   const [initialLoadDone, setInitialLoadDone] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const [stockRequests, setStockRequests] = useState([]);
   const [supplierInventory, setSupplierInventory] = useState([]);
@@ -397,12 +399,15 @@ const loadData = async () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      <div className="w-64 bg-gradient-to-b from-teal-600 to-blue-600 text-white flex flex-col">
+      {sidebarOpen && (
+        <div className="fixed inset-0 bg-black/50 z-30 md:hidden" onClick={() => setSidebarOpen(false)} />
+      )}
+      <div className={`fixed md:relative inset-y-0 left-0 z-40 w-64 bg-gradient-to-b from-teal-600 to-blue-600 text-white flex flex-col transition-transform duration-300 md:translate-x-0 ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="p-6 text-2xl font-bold border-b border-teal-500">
           Pharmora Supply
         </div>
 
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="flex-1 p-4 space-y-2" onClick={() => setSidebarOpen(false)}>
           <button
             onClick={() => setActiveTab("dashboard")}
             className={`w-full flex items-center gap-3 p-3 rounded-lg transition ${
@@ -484,7 +489,10 @@ const loadData = async () => {
       </div>
 
       <div className="flex-1 overflow-y-auto">
-        <div className="p-8">
+        <div className="p-4 md:p-8">
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden mb-4 p-2 text-gray-600 hover:bg-gray-100 rounded-lg">
+            <Menu size={22} />
+          </button>
           <div className="flex justify-between items-start mb-8">
             <div>
               <h1 className="text-3xl font-bold text-gray-900 mb-2">
@@ -510,7 +518,7 @@ const loadData = async () => {
             <div>
               <h2 className="text-2xl font-bold mb-6">Dashboard Overview</h2>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+              <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6 mb-8">
                 <StatsCard
                   title="Pending Requests"
                   value={stats.pending_requests}
